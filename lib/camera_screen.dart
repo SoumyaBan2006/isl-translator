@@ -3,7 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'landmark_painter.dart';
+import 'gemini_service.dart';
+import 'tts_service.dart';
+import 'translation_service.dart';
+import 'session_service.dart';
+import 'sign_buffer.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
@@ -13,23 +19,49 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
+  // Camera
   CameraController? _controller;
   bool _isReady = false;
   bool _permissionDenied = false;
   bool _isProcessing = false;
   bool _isFrontCamera = true;
-  String _detectedSign = 'Point your hand at the camera';
-  List<PoseLandmark> _landmarks = [];
 
+  // ML Kit
+  List<PoseLandmark> _landmarks = [];
   final PoseDetector _poseDetector = PoseDetector(
-    options: PoseDetectorOptions(
-      mode: PoseDetectionMode.stream,
-    ),
+    options: PoseDetectorOptions(mode: PoseDetectionMode.stream),
   );
+
+  // Sign detection
+  String _currentSign = '';
+  final List<String> _predBuffer = [];
+  List<String> _collectedSigns = [];
+
+  // Services
+  final GeminiService _gemini = GeminiService();
+  final TTSService _tts = TTSService();
+  final TranslationService _translator = TranslationService();
+  final SessionService _sessions = SessionService();
+  late SignBuffer _signBuffer;
+
+  // UI state
+  String _sentence = '';
+  bool _isLoadingGemini = false;
+  String _selectedLanguage = 'en';
+  String _selectedLanguageCode = 'en-IN';
+
+  final Map<String, Map<String, String>> _languages = {
+    'en': {'name': 'English', 'ttsCode': 'en-IN'},
+    'hi': {'name': 'Hindi', 'ttsCode': 'hi-IN'},
+    'bn': {'name': 'Bengali', 'ttsCode': 'bn-IN'},
+    'ta': {'name': 'Tamil', 'ttsCode': 'ta-IN'},
+    'te': {'name': 'Telugu', 'ttsCode': 'te-IN'},
+  };
 
   @override
   void initState() {
     super.initState();
+    _signBuffer = SignBuffer(onSentenceReady: _onSentenceReady);
     _initCamera();
   }
 
@@ -62,9 +94,7 @@ class _CameraScreenState extends State<CameraScreen> {
     await _controller!.initialize();
     await _controller!.startImageStream(_processFrame);
 
-    if (mounted) {
-      setState(() => _isReady = true);
-    }
+    if (mounted) setState(() => _isReady = true);
   }
 
   Future<void> _processFrame(CameraImage image) async {
@@ -72,14 +102,11 @@ class _CameraScreenState extends State<CameraScreen> {
     _isProcessing = true;
 
     try {
-      // Correctly combine all plane bytes
       final bytes = image.planes[0].bytes;
-
       final imageSize = Size(
         image.width.toDouble(),
         image.height.toDouble(),
       );
-
       final imageRotation = _isFrontCamera
           ? InputImageRotation.rotation270deg
           : InputImageRotation.rotation90deg;
@@ -98,18 +125,103 @@ class _CameraScreenState extends State<CameraScreen> {
 
       if (mounted) {
         setState(() {
-          if (poses.isNotEmpty) {
-            _landmarks = poses.first.landmarks.values.toList();
-          } else {
-            _landmarks = [];
-          }
+          _landmarks = poses.isNotEmpty
+              ? poses.first.landmarks.values.toList()
+              : [];
         });
       }
+
+      // For now sign detection shows landmark count as placeholder
+      // This will be replaced with actual model inference in next step
+      if (_landmarks.isNotEmpty) {
+        final mockSign = _getMockSign(_landmarks.length);
+        _updatePrediction(mockSign);
+      }
     } catch (e) {
-      debugPrint('Error processing frame: $e');
+      debugPrint('Frame error: $e');
     } finally {
       _isProcessing = false;
     }
+  }
+
+  // Temporary mock sign detection based on landmark count
+  // Replace this with actual model when model file is ready
+  String _getMockSign(int landmarkCount) {
+    return '';
+  }
+
+  void _updatePrediction(String sign) {
+    _predBuffer.add(sign);
+    if (_predBuffer.length > 8) _predBuffer.removeAt(0);
+
+    final counts = <String, int>{};
+    for (final s in _predBuffer) {
+      if (s.isNotEmpty) counts[s] = (counts[s] ?? 0) + 1;
+    }
+
+    if (counts.isEmpty) return;
+
+    final best = counts.entries.reduce((a, b) => a.value > b.value ? a : b);
+
+    if (best.value >= 6 && best.key != _currentSign) {
+      setState(() => _currentSign = best.key);
+      _signBuffer.addSign(best.key);
+
+      setState(() {
+        _collectedSigns = _signBuffer.currentSigns;
+      });
+
+      FirebaseAnalytics.instance.logEvent(
+        name: 'sign_detected',
+        parameters: {'sign': best.key},
+      );
+    }
+  }
+
+  Future<void> _onSentenceReady(List<String> signs) async {
+    setState(() {
+      _isLoadingGemini = true;
+      _collectedSigns = [];
+      _currentSign = '';
+    });
+
+    FirebaseAnalytics.instance.logEvent(
+      name: 'sentence_formed',
+      parameters: {'sign_count': signs.length},
+    );
+
+    // Get sentence from Gemini
+    String englishSentence = await _gemini.signsToSentence(signs);
+
+    // Translate if needed
+    String finalSentence = englishSentence;
+    if (_selectedLanguage != 'en') {
+      finalSentence = await _translator.translate(
+        englishSentence,
+        _selectedLanguage,
+      );
+    }
+
+    setState(() {
+      _sentence = finalSentence;
+      _isLoadingGemini = false;
+    });
+
+    // Speak it
+    await _tts.speak(finalSentence, languageCode: _selectedLanguageCode);
+
+    FirebaseAnalytics.instance.logEvent(
+      name: 'audio_played',
+      parameters: {'language': _selectedLanguage},
+    );
+
+    // Save to Firestore
+    await _sessions.saveSession(
+      signs: signs,
+      sentence: englishSentence,
+      translatedSentence: finalSentence,
+      language: _selectedLanguage,
+    );
   }
 
   @override
@@ -117,6 +229,8 @@ class _CameraScreenState extends State<CameraScreen> {
     _controller?.stopImageStream();
     _controller?.dispose();
     _poseDetector.close();
+    _tts.dispose();
+    _signBuffer.dispose();
     super.dispose();
   }
 
@@ -131,43 +245,43 @@ class _CameraScreenState extends State<CameraScreen> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: DropdownButton<String>(
+              value: _selectedLanguage,
+              dropdownColor: Colors.teal.shade900,
+              underline: const SizedBox(),
+              icon: const Icon(Icons.language, color: Colors.white),
+              items: _languages.entries.map((e) {
+                return DropdownMenuItem(
+                  value: e.key,
+                  child: Text(
+                    e.value['name']!,
+                    style: const TextStyle(color: Colors.white, fontSize: 13),
+                  ),
+                );
+              }).toList(),
+              onChanged: (val) {
+                if (val != null) {
+                  setState(() {
+                    _selectedLanguage = val;
+                    _selectedLanguageCode = _languages[val]!['ttsCode']!;
+                  });
+                  FirebaseAnalytics.instance.logEvent(
+                    name: 'language_changed',
+                    parameters: {'language': val},
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
       body: Column(
         children: [
-          Expanded(
-            child: _buildCameraView(),
-          ),
-          Container(
-            width: double.infinity,
-            color: Colors.teal.shade900,
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                const Text(
-                  'Detected Sign:',
-                  style: TextStyle(color: Colors.white54, fontSize: 13),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  _detectedSign,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Landmarks detected: ${_landmarks.length}',
-                  style: const TextStyle(
-                    color: Colors.white38,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          Expanded(child: _buildCameraView()),
+          _buildBottomPanel(),
         ],
       ),
     );
@@ -177,9 +291,9 @@ class _CameraScreenState extends State<CameraScreen> {
     if (_permissionDenied) {
       return const Center(
         child: Padding(
-          padding: EdgeInsets.all(24.0),
+          padding: EdgeInsets.all(24),
           child: Text(
-            'Camera permission denied.\nPlease enable it in your phone settings.',
+            'Camera permission denied.\nPlease enable it in Settings.',
             style: TextStyle(color: Colors.white70, fontSize: 16),
             textAlign: TextAlign.center,
           ),
@@ -219,8 +333,118 @@ class _CameraScreenState extends State<CameraScreen> {
                   isFrontCamera: _isFrontCamera,
                 ),
               ),
+            // Signs collected so far
+            if (_collectedSigns.isNotEmpty)
+              Positioned(
+                top: 12,
+                left: 12,
+                right: 12,
+                child: Wrap(
+                  spacing: 6,
+                  children: _collectedSigns.map((sign) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.teal.withOpacity(0.85),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Text(
+                        sign,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildBottomPanel() {
+    return Container(
+      width: double.infinity,
+      color: Colors.teal.shade900,
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Current sign
+          Row(
+            children: [
+              const Text(
+                'Detecting: ',
+                style: TextStyle(color: Colors.white54, fontSize: 13),
+              ),
+              Text(
+                _currentSign.isEmpty ? '—' : _currentSign,
+                style: const TextStyle(
+                  color: Colors.greenAccent,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+
+          // Sentence
+          if (_isLoadingGemini)
+            const Row(
+              children: [
+                SizedBox(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  ),
+                ),
+                SizedBox(width: 8),
+                Text(
+                  'Forming sentence...',
+                  style: TextStyle(color: Colors.white54, fontSize: 14),
+                ),
+              ],
+            )
+          else if (_sentence.isNotEmpty)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    _sentence,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  onPressed: () {
+                    _tts.replayLast();
+                    FirebaseAnalytics.instance
+                        .logEvent(name: 'audio_replayed');
+                  },
+                  icon: const Icon(Icons.volume_up, color: Colors.white),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+              ],
+            )
+          else
+            const Text(
+              'Sign and pause to form a sentence',
+              style: TextStyle(color: Colors.white38, fontSize: 14),
+            ),
+        ],
       ),
     );
   }
