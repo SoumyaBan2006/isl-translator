@@ -15,25 +15,41 @@ class LandmarkPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final dotPaint = Paint()
-      ..color = Colors.greenAccent
-      ..strokeWidth = 3
+      ..color = const Color(0xFF4ade80).withOpacity(0.85)
       ..style = PaintingStyle.fill;
 
     final linePaint = Paint()
-      ..color = Colors.tealAccent.withOpacity(0.6)
-      ..strokeWidth = 2
+      ..color = const Color(0xFF1D9E75).withOpacity(0.5)
+      ..strokeWidth = 1.5
       ..style = PaintingStyle.stroke;
 
-    for (final landmark in landmarks) {
-      double x = landmark.x * size.width / imageSize.width;
-      double y = landmark.y * size.height / imageSize.height;
+    const armIndices = {11, 12, 13, 14, 15, 16};
+    final Map<int, Offset> positions = {};
 
-      // Mirror x axis for front camera
-      if (isFrontCamera) {
-        x = size.width - x;
+    for (final lm in landmarks) {
+      if (!armIndices.contains(lm.type.index)) continue;
+      double x = lm.x * size.width / imageSize.width;
+      double y = lm.y * size.height / imageSize.height;
+      if (isFrontCamera) x = size.width - x;
+      positions[lm.type.index] = Offset(x, y);
+    }
+
+    final connections = [
+      [11, 13], [13, 15],
+      [12, 14], [14, 16],
+      [11, 12],
+    ];
+
+    for (final conn in connections) {
+      final a = positions[conn[0]];
+      final b = positions[conn[1]];
+      if (a != null && b != null) {
+        canvas.drawLine(a, b, linePaint);
       }
+    }
 
-      canvas.drawCircle(Offset(x, y), 5, dotPaint);
+    for (final offset in positions.values) {
+      canvas.drawCircle(offset, 5, dotPaint);
     }
   }
 
