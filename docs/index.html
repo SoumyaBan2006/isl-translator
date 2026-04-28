@@ -5,24 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ISL Bridge</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
   background: #0b0b0c;
-  color: #eaeaea;
+  color: #e5e7eb;
 }
 
-/* Container */
 .container {
   max-width: 1100px;
   margin: auto;
-  padding: 60px 20px;
+  padding: 40px 20px;
 }
 
-/* Hero */
+/* HERO */
 .hero {
   text-align: center;
   padding: 100px 20px 60px;
@@ -31,27 +30,56 @@ body {
 .hero h1 {
   font-size: 3rem;
   font-weight: 700;
-  margin-bottom: 10px;
 }
 
 .hero p {
   color: #9ca3af;
-  font-size: 1.1rem;
+  margin-top: 10px;
 }
 
-/* Section spacing */
-.section {
-  margin-top: 60px;
-}
-
-/* Headings */
-h2 {
-  font-size: 1.4rem;
+/* YOUR EXISTING BUTTON — upgraded */
+button, .download-btn {
+  margin-top: 20px;
+  background: #ffffff;
+  color: #000;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
   font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+/* Sections */
+.section {
+  margin-top: 80px;
+}
+
+.section h2 {
+  font-size: 1.4rem;
   margin-bottom: 12px;
 }
 
-/* Card (VERY subtle) */
+/* Features */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.feature {
+  background: #111113;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #1f1f22;
+}
+
+/* Card */
 .card {
   background: #111113;
   border: 1px solid #1f1f22;
@@ -59,26 +87,11 @@ h2 {
   padding: 20px;
 }
 
-/* Buttons (upgrade yours automatically) */
-button {
-  background: #ffffff;
-  color: #000;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-button:hover {
-  opacity: 0.85;
-}
-
-/* Links */
-a {
-  color: #60a5fa;
-  text-decoration: none;
+/* Divider */
+.divider {
+  height: 1px;
+  background: #1f1f22;
+  margin: 60px 0;
 }
 
 /* Footer */
@@ -89,92 +102,93 @@ a {
   color: #6b7280;
   font-size: 0.9rem;
 }
-
-/* Subtle divider */
-.divider {
-  height: 1px;
-  background: #1f1f22;
-  margin: 40px 0;
-}
 </style>
 </head>
 
 <body>
 
-<!-- HERO -->
+<!-- 🔥 HERO -->
 <div class="hero">
   <h1>ISL Bridge</h1>
   <p>Real-time Indian Sign Language → Speech Translator</p>
+  <a href="https://drive.google.com/file/d/1vQgTW9nbcEeUkdsajd-bhlNwIIBGeCpx/view?usp=sharing" class="btn">Download APK</a>
 </div>
 
 <div class="container">
 
-  <!-- 🔥 KEEP YOUR EXISTING CONTENT -->
-  <div class="section card">
+  <!-- 💡 VALUE -->
+  <div class="section">
+    <h2>Why ISL Bridge?</h2>
+    <p style="color:#9ca3af;">
+      Instantly translate Indian Sign Language into natural speech using AI. No interpreter needed.
+    </p>
+  </div>
 
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ISL Bridge — Indian Sign Language Translator</title>
-    <style>
-      body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #fff; margin: 0; padding: 40px 20px; max-width: 600px; margin: 0 auto; }
-      h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
-      .green { color: #4ade80; }
-      p { color: #9ca3af; line-height: 1.7; }
-      .btn { display: inline-block; background: #085041; color: #4ade80; padding: 12px 28px; border-radius: 24px; text-decoration: none; font-weight: 500; margin: 8px 8px 8px 0; border: 1px solid #1D9E75; }
-      .tag { display: inline-block; background: #0d0d0d; color: #5DCAA5; padding: 4px 10px; border-radius: 6px; font-size: 12px; margin: 3px; border: 1px solid #1a1a1a; }
-      .section { margin: 32px 0; }
-      h2 { font-size: 16px; color: #9ca3af; font-weight: 500; margin-bottom: 12px; }
-    </style>
-    </head>
-    <body>
-      <div style="margin-bottom:8px"><span style="width:8px;height:8px;background:#4ade80;border-radius:50%;display:inline-block;margin-right:8px"></span><span style="color:#4ade80;font-size:13px">Live prototype</span></div>
-      <h1>ISL <span class="green">Bridge</span></h1>
-      <p>Real-time Indian Sign Language translator for India's 5 million ISL users. Signs detected on-device. Sentences formed by Gemini AI. Spoken in 5 Indian languages.</p>
-    
-      <div class="section">
-        <a href="https://drive.google.com/file/d/1vQgTW9nbcEeUkdsajd-bhlNwIIBGeCpx/view?usp=sharing" class="btn">Download APK</a>
-        <a href="YOUR_YOUTUBE_LINK" class="btn">Watch Demo</a>
-        <a href="https://github.com/SoumyaBan2006/isl-translator" class="btn">GitHub</a>
-      </div>
-    
-      <div class="section">
-        <h2>Google technologies used</h2>
-        <span class="tag">Google ML Kit</span>
-        <span class="tag">Gemini API</span>
-        <span class="tag">Firebase Firestore</span>
-        <span class="tag">Firebase Analytics</span>
-        <span class="tag">Firebase Auth</span>
-        <span class="tag">Flutter</span>
-        <span class="tag">Android</span>
-      </div>
-    
-      <div class="section">
-        <h2>Built by</h2>
-        <p>Soumya Banerjee & Trisha Karmakar<br>Dr. B.C. Roy Engineering College, Durgapur<br>Solution Challenge 2026 - Build with AI</p>
-      </div>
-    </body>
-    </html>
-
+  <!-- ⚙️ FEATURES -->
+  <div class="section">
+    <h2>Features</h2>
+    <div class="features">
+      <div class="feature">Real-time sign detection</div>
+      <div class="feature">AI sentence formation</div>
+      <div class="feature">Multilingual speech output</div>
+      <div class="feature">Works on Android devices</div>
+      <div class="feature">Translation history</div>
+      <div class="feature">Offline detection</div>
+    </div>
   </div>
 
   <div class="divider"></div>
 
-  <!-- Optional short info (doesn't replace your content) -->
-  <div class="section">
-    <h2>About</h2>
-    <p style="color:#9ca3af;">
-      ISL Bridge is a real-time AI-powered system that translates Indian Sign Language into natural spoken sentences,
-      removing the need for human interpreters.
-    </p>
+  <!-- 🧾 YOUR ORIGINAL CONTENT -->
+  <div class="section card">
+
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>ISL Bridge — Indian Sign Language Translator</title>
+      <style>
+        body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #fff; margin: 0; padding: 40px 20px; max-width: 600px; margin: 0 auto; }
+        h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+        .green { color: #4ade80; }
+        p { color: #9ca3af; line-height: 1.7; }
+        .btn { display: inline-block; background: #085041; color: #4ade80; padding: 12px 28px; border-radius: 24px; text-decoration: none; font-weight: 500; margin: 8px 8px 8px 0; border: 1px solid #1D9E75; }
+        .tag { display: inline-block; background: #0d0d0d; color: #5DCAA5; padding: 4px 10px; border-radius: 6px; font-size: 12px; margin: 3px; border: 1px solid #1a1a1a; }
+        .section { margin: 32px 0; }
+        h2 { font-size: 16px; color: #9ca3af; font-weight: 500; margin-bottom: 12px; }
+      </style>
+      </head>
+      <body>
+        <div style="margin-bottom:8px"><span style="width:8px;height:8px;background:#4ade80;border-radius:50%;display:inline-block;margin-right:8px"></span><span style="color:#4ade80;font-size:13px">Live prototype</span></div>
+        <h1>ISL <span class="green">Bridge</span></h1>
+        <p>Real-time Indian Sign Language translator for India's 5 million ISL users. Signs detected on-device. Sentences formed by Gemini AI. Spoken in 5 Indian languages.</p>
+      
+        <div class="section">
+          <a href="YOUR_YOUTUBE_LINK" class="btn">Watch Demo</a>
+          <a href="https://github.com/SoumyaBan2006/isl-translator" class="btn">GitHub</a>
+        </div>
+      
+        <div class="section">
+          <h2>Google technologies used</h2>
+          <span class="tag">Google ML Kit</span>
+          <span class="tag">Gemini API</span>
+          <span class="tag">Firebase Firestore</span>
+          <span class="tag">Firebase Analytics</span>
+          <span class="tag">Firebase Auth</span>
+          <span class="tag">Flutter</span>
+          <span class="tag">Android</span>
+        </div>
+      
+        <div class="section">
+          <h2>Built by</h2>
+          <p>Soumya Banerjee & Trisha Karmakar<br>Dr. B.C. Roy Engineering College, Durgapur<br>Solution Challenge 2026 - Build with AI</p>
+        </div>
+      </body>
+      </html>
+
   </div>
 
-</div>
-
-<div class="footer">
-  Built by Soumya Banerjee • ISL Bridge © 2026
 </div>
 
 </body>
