@@ -139,8 +139,8 @@ Trained on the INCLUDE dataset by AI4Bharat (IIT Madras).
 ## 👨‍💻 Team
 
 **PseudoPair**  
-Soumya Banerjee (Lead)
-Trisha Karmakar
+- Soumya Banerjee (Lead)
+- Trisha Karmakar
 
 ---
 
