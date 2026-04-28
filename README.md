@@ -124,7 +124,7 @@ Trained on the INCLUDE dataset by AI4Bharat (IIT Madras).
 
 ---
 
-## 🌐 Live Prototype
+## 🌐 Live Prototype (Link to download apk is present in this prototype)
 
 🔗 https://soumyaban2006.github.io/isl-translator/
 
@@ -133,6 +133,12 @@ Trained on the INCLUDE dataset by AI4Bharat (IIT Madras).
 ## 📂 Repository
 
 🔗 https://github.com/SoumyaBan2006/isl-translator
+
+---
+
+## 📂 Demo Video
+
+🔗 https://drive.google.com/file/d/1BjoxxV-Rp1Zh3tIoZ9Fn-q4c-lrMPHko/view?usp=sharing
 
 ---
 
