@@ -5,100 +5,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ISL Bridge</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
+  margin: 0;
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #000000, #0f2027, #203a43, #2c5364);
-  color: white;
-  overflow-x: hidden;
+  background: #0b0b0c;
+  color: #eaeaea;
 }
 
-/* Animated background glow */
-body::before {
-  content: "";
-  position: fixed;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, #00ffcc55, transparent);
-  top: -100px;
-  left: -100px;
-  z-index: -1;
-  animation: float 8s infinite alternate ease-in-out;
-}
-
-@keyframes float {
-  0% { transform: translate(0,0); }
-  100% { transform: translate(200px,150px); }
-}
-
+/* Container */
 .container {
-  padding: 40px 8%;
+  max-width: 1100px;
+  margin: auto;
+  padding: 60px 20px;
 }
 
-/* Header / Hero */
+/* Hero */
 .hero {
   text-align: center;
-  padding: 80px 20px;
+  padding: 100px 20px 60px;
 }
 
 .hero h1 {
-  font-size: 3.5rem;
-  font-weight: 800;
-  background: linear-gradient(90deg, #00ffcc, #00aaff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 
 .hero p {
-  margin-top: 10px;
-  color: #ccc;
+  color: #9ca3af;
+  font-size: 1.1rem;
 }
 
-/* Glass card wrapper */
-.glass {
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(12px);
-  border-radius: 16px;
-  padding: 25px;
-  margin-top: 30px;
-  box-shadow: 0 0 30px rgba(0,255,200,0.1);
-  transition: 0.3s;
+/* Section spacing */
+.section {
+  margin-top: 60px;
 }
 
-.glass:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 40px rgba(0,255,200,0.2);
+/* Headings */
+h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 12px;
 }
 
-/* Buttons (keeps your original buttons but upgrades look) */
-button, .btn {
-  background: linear-gradient(90deg, #00ffcc, #00aaff);
+/* Card (VERY subtle) */
+.card {
+  background: #111113;
+  border: 1px solid #1f1f22;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+/* Buttons (upgrade yours automatically) */
+button {
+  background: #ffffff;
+  color: #000;
   border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  color: black;
-  font-weight: bold;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 500;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
 button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px #00ffcc;
+  opacity: 0.85;
 }
 
-/* Section headings */
-h2 {
-  margin-bottom: 10px;
-  color: #00ffcc;
+/* Links */
+a {
+  color: #60a5fa;
+  text-decoration: none;
 }
 
 /* Footer */
@@ -106,37 +86,31 @@ h2 {
   text-align: center;
   margin-top: 80px;
   padding: 20px;
-  color: #888;
+  color: #6b7280;
+  font-size: 0.9rem;
 }
 
-/* Fade-in animation */
-.fade-in {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeIn 1s forwards;
-}
-
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Subtle divider */
+.divider {
+  height: 1px;
+  background: #1f1f22;
+  margin: 40px 0;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🔥 HERO -->
-<div class="hero fade-in">
+<!-- HERO -->
+<div class="hero">
   <h1>ISL Bridge</h1>
-  <p>Real-time Indian Sign Language Translator</p>
+  <p>Real-time Indian Sign Language → Speech Translator</p>
 </div>
 
 <div class="container">
 
-  <!-- 🔹 YOUR ORIGINAL CONTENT WRAPPED -->
-  <div class="glass fade-in" style="animation-delay:0.2s">
+  <!-- 🔥 KEEP YOUR EXISTING CONTENT -->
+  <div class="section card">
 
     <!DOCTYPE html>
     <html lang="en">
@@ -186,13 +160,22 @@ h2 {
 
   </div>
 
+  <div class="divider"></div>
+
+  <!-- Optional short info (doesn't replace your content) -->
+  <div class="section">
+    <h2>About</h2>
+    <p style="color:#9ca3af;">
+      ISL Bridge is a real-time AI-powered system that translates Indian Sign Language into natural spoken sentences,
+      removing the need for human interpreters.
+    </p>
+  </div>
+
 </div>
-<script>
-/* Auto fade-in stagger */
-document.querySelectorAll('.fade-in').forEach((el, i) => {
-  el.style.animationDelay = (i * 0.2) + "s";
-});
-</script>
+
+<div class="footer">
+  Built by Soumya Banerjee • ISL Bridge © 2026
+</div>
 
 </body>
 </html>
