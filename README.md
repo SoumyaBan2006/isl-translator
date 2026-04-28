@@ -105,6 +105,16 @@ This creates a **massive communication barrier** in hospitals, schools, banks, a
 
 ---
 
+## 🗃️ Dataset
+Trained on the INCLUDE dataset by AI4Bharat (IIT Madras).
+
+- 984 videos across 53 ISL signs
+- 7 different signers for diversity
+- Available at: zenodo.org/record/4010759
+- GitHub: AI4Bharat/INCLUDE
+
+---
+
 ## 💸 Cost Efficiency
 
 - Monthly cost: ₹3,000 – ₹5,000
