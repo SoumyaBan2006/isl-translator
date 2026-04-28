@@ -3,43 +3,196 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ISL Bridge — Indian Sign Language Translator</title>
+<title>ISL Bridge</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
 <style>
-  body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #fff; margin: 0; padding: 40px 20px; max-width: 600px; margin: 0 auto; }
-  h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
-  .green { color: #4ade80; }
-  p { color: #9ca3af; line-height: 1.7; }
-  .btn { display: inline-block; background: #085041; color: #4ade80; padding: 12px 28px; border-radius: 24px; text-decoration: none; font-weight: 500; margin: 8px 8px 8px 0; border: 1px solid #1D9E75; }
-  .tag { display: inline-block; background: #0d0d0d; color: #5DCAA5; padding: 4px 10px; border-radius: 6px; font-size: 12px; margin: 3px; border: 1px solid #1a1a1a; }
-  .section { margin: 32px 0; }
-  h2 { font-size: 16px; color: #9ca3af; font-weight: 500; margin-bottom: 12px; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #000000, #0f2027, #203a43, #2c5364);
+  color: white;
+  overflow-x: hidden;
+}
+
+/* Animated background glow */
+body::before {
+  content: "";
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #00ffcc55, transparent);
+  top: -100px;
+  left: -100px;
+  z-index: -1;
+  animation: float 8s infinite alternate ease-in-out;
+}
+
+@keyframes float {
+  0% { transform: translate(0,0); }
+  100% { transform: translate(200px,150px); }
+}
+
+.container {
+  padding: 40px 8%;
+}
+
+/* Header / Hero */
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #00ffcc, #00aaff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+  margin-top: 10px;
+  color: #ccc;
+}
+
+/* Glass card wrapper */
+.glass {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 25px;
+  margin-top: 30px;
+  box-shadow: 0 0 30px rgba(0,255,200,0.1);
+  transition: 0.3s;
+}
+
+.glass:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 40px rgba(0,255,200,0.2);
+}
+
+/* Buttons (keeps your original buttons but upgrades look) */
+button, .btn {
+  background: linear-gradient(90deg, #00ffcc, #00aaff);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #00ffcc;
+}
+
+/* Section headings */
+h2 {
+  margin-bottom: 10px;
+  color: #00ffcc;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 80px;
+  padding: 20px;
+  color: #888;
+}
+
+/* Fade-in animation */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 </style>
 </head>
+
 <body>
-  <div style="margin-bottom:8px"><span style="width:8px;height:8px;background:#4ade80;border-radius:50%;display:inline-block;margin-right:8px"></span><span style="color:#4ade80;font-size:13px">Live prototype</span></div>
-  <h1>ISL <span class="green">Bridge</span></h1>
-  <p>Real-time Indian Sign Language translator for India's 5 million ISL users. Signs detected on-device. Sentences formed by Gemini AI. Spoken in 5 Indian languages.</p>
 
-  <div class="section">
-    <a href="https://drive.google.com/file/d/1vQgTW9nbcEeUkdsajd-bhlNwIIBGeCpx/view?usp=sharing" class="btn">Download APK</a>
-    <a href="YOUR_YOUTUBE_LINK" class="btn">Watch Demo</a>
-    <a href="https://github.com/SoumyaBan2006/isl-translator" class="btn">GitHub</a>
+<!-- 🔥 HERO -->
+<div class="hero fade-in">
+  <h1>ISL Bridge</h1>
+  <p>Real-time Indian Sign Language Translator</p>
+</div>
+
+<div class="container">
+
+  <!-- 🔹 YOUR ORIGINAL CONTENT WRAPPED -->
+  <div class="glass fade-in" style="animation-delay:0.2s">
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISL Bridge — Indian Sign Language Translator</title>
+    <style>
+      body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #fff; margin: 0; padding: 40px 20px; max-width: 600px; margin: 0 auto; }
+      h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+      .green { color: #4ade80; }
+      p { color: #9ca3af; line-height: 1.7; }
+      .btn { display: inline-block; background: #085041; color: #4ade80; padding: 12px 28px; border-radius: 24px; text-decoration: none; font-weight: 500; margin: 8px 8px 8px 0; border: 1px solid #1D9E75; }
+      .tag { display: inline-block; background: #0d0d0d; color: #5DCAA5; padding: 4px 10px; border-radius: 6px; font-size: 12px; margin: 3px; border: 1px solid #1a1a1a; }
+      .section { margin: 32px 0; }
+      h2 { font-size: 16px; color: #9ca3af; font-weight: 500; margin-bottom: 12px; }
+    </style>
+    </head>
+    <body>
+      <div style="margin-bottom:8px"><span style="width:8px;height:8px;background:#4ade80;border-radius:50%;display:inline-block;margin-right:8px"></span><span style="color:#4ade80;font-size:13px">Live prototype</span></div>
+      <h1>ISL <span class="green">Bridge</span></h1>
+      <p>Real-time Indian Sign Language translator for India's 5 million ISL users. Signs detected on-device. Sentences formed by Gemini AI. Spoken in 5 Indian languages.</p>
+    
+      <div class="section">
+        <a href="https://drive.google.com/file/d/1vQgTW9nbcEeUkdsajd-bhlNwIIBGeCpx/view?usp=sharing" class="btn">Download APK</a>
+        <a href="YOUR_YOUTUBE_LINK" class="btn">Watch Demo</a>
+        <a href="https://github.com/SoumyaBan2006/isl-translator" class="btn">GitHub</a>
+      </div>
+    
+      <div class="section">
+        <h2>Google technologies used</h2>
+        <span class="tag">Google ML Kit</span>
+        <span class="tag">Gemini API</span>
+        <span class="tag">Firebase Firestore</span>
+        <span class="tag">Firebase Analytics</span>
+        <span class="tag">Firebase Auth</span>
+        <span class="tag">Flutter</span>
+        <span class="tag">Android</span>
+      </div>
+    
+      <div class="section">
+        <h2>Built by</h2>
+        <p>Soumya Banerjee & Trisha Karmakar<br>Dr. B.C. Roy Engineering College, Durgapur<br>Solution Challenge 2026 - Build with AI</p>
+      </div>
+    </body>
+    </html>
+
   </div>
 
-  <div class="section">
-    <h2>Google technologies used</h2>
-    <span class="tag">Google ML Kit</span>
-    <span class="tag">Gemini API</span>
-    <span class="tag">Firebase Firestore</span>
-    <span class="tag">Firebase Analytics</span>
-    <span class="tag">Firebase Auth</span>
-    <span class="tag">Flutter</span>
-    <span class="tag">Android</span>
-  </div>
+</div>
+<script>
+/* Auto fade-in stagger */
+document.querySelectorAll('.fade-in').forEach((el, i) => {
+  el.style.animationDelay = (i * 0.2) + "s";
+});
+</script>
 
-  <div class="section">
-    <h2>Built by</h2>
-    <p>Soumya Banerjee & Trisha Karmakar<br>Dr. B.C. Roy Engineering College, Durgapur<br>Solution Challenge 2026 - Build with AI</p>
-  </div>
 </body>
 </html>
